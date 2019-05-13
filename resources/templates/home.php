@@ -2,7 +2,7 @@
 
 $github = array(
     "username" => "mbron864",
-    "access_token" => "5467f04db983edde1db221fc20eb6a58de7ca35f",
+    "access_token" => "408f4ca686a4bdad808a9b52f54527542acb377c",
     "base_url" => "https://api.github.com",
     "endpoints" => array(
         "search_issues" => "https://api.github.com" . "/search/issues?q=",
