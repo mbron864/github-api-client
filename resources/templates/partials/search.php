@@ -128,8 +128,8 @@ $("#filter").submit(function(e) {
 });
 
 function searchIssues(query, callback) {
-    let username = "<?php echo $github["username"] ?>";
-    let access_token = "<?php echo $github["access_token"] ?>";
+    let username = "<?php echo getenv('GITHUB_USER') ?>";
+    let access_token = "<?php echo getenv('GITHUB_TOKEN') ?>";
 
     $.ajax({
         type: "GET",
@@ -149,8 +149,8 @@ function searchIssues(query, callback) {
 }
 
 function getPullRequest(url, callback) {
-    let username = "<?php echo $github["username"] ?>";
-    let access_token = "<?php echo $github["access_token"] ?>";
+    let username = "<?php echo getenv('GITHUB_USER') ?>";
+    let access_token = "<?php echo getenv('GITHUB_TOKEN') ?>";
 
     $.ajax({
         type: "GET",
