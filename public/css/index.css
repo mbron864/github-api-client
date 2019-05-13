@@ -3,21 +3,94 @@ html, body {
     padding: 0;
 }
 
+#content {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
 .results {
-    border-width: 0px;
-    border-color: #dedede;
+    border-width: 1px;
+    border-color: #ced4da;
     border-style: solid;
+    border-radius: 0px 0px 5px 5px;
 }
 
 .results .pull-request.result {
-    padding: 10px 15px;
+    padding: 10px 0px;
     border-width: 1px 0px 0px 0px;
     border-style: inherit;
     border-color: inherit;
+}
+
+.results .pull-request.result:first-child {
+    border-width: 0px 0px 0px 0px;
 }
 
 .result .title {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+
+.avatar {
+    display: block;
+    height: 25px;
+    width: 25px;
+    margin-right: 0px;
+    margin-left: auto;
+    background-repeat: no-repeat;
+    background-size: contain;
+    border-radius: 3px;
+}
+
+.total {
+    font-size: .8rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #a7a7a7;
+    letter-spacing: 0.05rem;
+}
+
+.results-header {
+    background-color: #007bff;
+    border-radius: 5px 5px 0px 0px;
+    margin: 0;
+    margin-top: 10px;
+
+    font-size: .9rem;
+    text-transform: capitalize;
+    font-weight: 600;
+    color: white;
+    letter-spacing: 0.05rem;
+}
+.results-header .header-label {
+    border-width: 0px 1px 0px 0px;
+    border-style: solid;
+    border-color: white;
+}
+
+.results-header .header-label:last-child {
+    border-width: 0px 0px 0px 0px;
+}
+
+.spinner {
+    padding: 20px 0px
+}
+
+.no-results {
+    font-size: 1.5rem;
+    padding: 20px;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 100;
+    letter-spacing: 0.15rem;
+    color: #9a9ea2;
+}
+
+.form-row {
+    margin-bottom: 1em;
+}
+
+.form-row:last-child {
+    margin-bottom: 0;
 }

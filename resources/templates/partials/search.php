@@ -1,9 +1,19 @@
-<form class="row" id="search-form">
-    <div class="col-md-10">
-        <input id="query" type="text" class="form-control" placeholder="Search Query" aria-label="Search Query">
+<form id="search-form" class="needs-validation">
+    <div class="form-row">
+        <div class="col-md-6">
+            <input id="user" type="text" class="form-control" placeholder="User" aria-label="User" required>
+        </div>
+        <div class="col-md-6">
+            <input id="repo" type="text" class="form-control" placeholder="Repository" aria-label="Repository" required>
+        </div>
     </div>
-    <div class="col-md-2">
-        <button class="btn btn-primary btn-block" type="submit" id="btn-search">Search</button>
+    <div class="form-row">
+        <div class="col-md-10">
+            <input id="query" type="text" class="form-control" placeholder="Search Query" aria-label="Search Query" required>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-primary btn-block" type="submit" id="btn-search">Search</button>
+        </div>
     </div>
 </form>
 <form class="row" id="filter">
@@ -15,9 +25,24 @@
     </div>
 </form>
 <div class="row">
+    <div class="col text-right total">
+        <span class="total-label">Total:</span>
+        <span class="total-count">0</span>
+    </div>
+</div>
+<div class="row results-header">
+    <div id="pr-number" class="header-label col-md-1 col-sm-2">number</div>
+    <div id="pr-title" class="header-label col-sm">title</div>
+    <div id="pr-branch" class="header-label col-sm-4">branch</div>
+    <div id="pr-author" class="header-label col-sm-1 text-right">author</div>
+</div>
+<div class="row">
     <div class="col">
         <div class="results container-fluid">
-
+            <div class="no-results">
+                There are no results to display
+            </div>
+            <!-- Search results will get put here -->
         </div>
     </div>
 </div>
@@ -30,14 +55,27 @@ let filterRegEx = /[\s\S]*/g;
 $("#search-form").submit(function(e) {
     e.preventDefault();
 
-    let query = $("#query").val().split(" ").join("+");
+    let user = $("#user").val().trim();
+    let repo = $("#repo").val().trim();
+    let query = $("#query").val().trim();
 
-    // Extract the owner and repository from the query string
-    // let owner_and_repo = query.match(/repo:[^+]/gm).split(":")[1].split("/");
-    // let owner = owner_and_repo[0];
-    // let repo = owner_and_repo[1];
+    // Validation
 
-    // TODO: add spinner
+    query = query.split(" ").join("+") + `+repo:${user}/${repo}`;
+
+    console.log(query);
+
+    // Disable the search button
+    $("#btn-search").attr("disabled", true);
+
+    // Insert a loading spinner while pull requests are being pulled
+    $(".results").html(`
+        <div class="d-flex justify-content-center spinner">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    `);
 
     searchIssues(query, (data, err) => {
         if (err) {
@@ -61,8 +99,12 @@ $("#search-form").submit(function(e) {
                 Atomics.add(counter, 0, 1);
                 // Check to see if all pull requests where loaded
                 if (data.items.length === Atomics.load(counter, 0).valueOf()) {
+                    // Done
+                    console.log(data);
                     console.log(results);
+
                     showResults();
+                    $("#btn-search").removeAttr("disabled");
                 }
             });
         });
@@ -91,7 +133,7 @@ function searchIssues(query, callback) {
 
     $.ajax({
         type: "GET",
-        url: "<?php echo $github["endpoints"]["search_issues"] ?>" + query,
+        url: "<?php echo $github["endpoints"]["search_issues"] ?>" + query + "&per_page=100",
         datatype: "json",
         contentType: "application/json",
         beforeSend: function(xhr) {
@@ -128,20 +170,32 @@ function getPullRequest(url, callback) {
 }
 
 function showResults() {
+    let counter = 0;
     let itemListHtml = "";
     $.each(results, function(i, item) {
         if (item.head.ref.match(filterRegEx)) {
+            counter++;
             itemListHtml += `
-            <div id="item-${i}" class="row pull-request result">
+            <div id="item item-${i}" class="row pull-request result">
                 <div class="number col-md-1 col-sm-2">${item.number}</div>
                 <div class="title col-sm">${item.title}</div>
                 <div class="branch col-sm-4">${item.head.ref}</div>
+                <div class="branch col-sm-1">
+                    <span
+                        class="avatar"
+                        data-toggle="tooltip"
+                        data-placement="left"
+                        title="${item.user.login}"
+                        style="background-image: url(${item.user.avatar_url})">
+                    </span>
+                </div>
             </div>`;
         }
     });
 
     $(".results").html("");
     $(".results").append(itemListHtml);
+    $(".total-count").html(counter);
 }
 
 </script>

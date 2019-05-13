@@ -54,5 +54,11 @@ require_once(realpath(dirname(__FILE__) . "/resources/config.php"));
 
     <script type="text/javascript" src="public/js/search.js"></script>
 
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+        });
+    </script>
+
 </body>
 </html>
